@@ -37,7 +37,7 @@ public class LogoutServlet extends HttpServlet {
 		session.removeAttribute("userid");
 		session.invalidate();
 		PrintWriter out = response.getWriter();
-		out.println("Logout SucessFully");
+		out.println("Logout SucessFully.");
 		out.close();
 	}
 

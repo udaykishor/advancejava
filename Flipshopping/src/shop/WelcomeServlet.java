@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import java.sql.SQLException;
 
 import javax.naming.NamingException;
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -22,11 +23,10 @@ public class WelcomeServlet extends HttpServlet {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
 		response.setContentType("text/html");
 		String userid= request.getParameter("userid");
 		String password= request.getParameter("password");
-		//String message = "";
 		PrintWriter out = response.getWriter();
 		UserDTO userDTO = new UserDTO();
 		userDTO.setUserid(userid);
@@ -39,23 +39,25 @@ public class WelcomeServlet extends HttpServlet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		if ((userObject!=null && userObject.getUserid()!=null)) {
+		if (userObject!=null && userObject.getUserid()!=null) {
 			HttpSession session = request.getSession(true);
 			System.out.println("Session ID is "+session.getId());
 			session.setAttribute("userid", userid);
-			
+			response.setContentType("text/html");
+			out.println("<h1>Hello Client "+userid+"</h1>");
+			out.println("<form action='order' method='get'>");
+			out.println("<button>Your Order</button>");
+			out.println("</form>");
+			out.println("<form action='logout' method='get'>");
+			out.println("<button>Logout</button>");
+			out.println("</form>");
+			out.close();
 		}
 		else {
-			out.println("Invalid Userid and Password");
+			out.println(userObject.getMessage());
+			out.close();
 		}
-		out.println("<h1>Hello Client "+userid+"</h1>");
-		out.println("<form action='order' method='get'>");
-		out.println("<button>Your Order</button>");
-		out.println("</form>");
-		out.println("<form action='logout' method='get'>");
-		out.println("<button>Logout</button>");
-		out.println("</form>");
-		out.close();
+		
 	}
 
 }
